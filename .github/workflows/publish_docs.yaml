@@ -38,5 +38,5 @@ jobs:
           branches: sphinx-docs
           key: main
           files: .\docs\$semantic_version
-          run: |
+        run: |
             echo "test"
