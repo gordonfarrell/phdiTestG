@@ -39,4 +39,4 @@ jobs:
           key: main
           files: .\docs\$semantic_version
           run: |
-            echo $"test"
+            echo "test"
