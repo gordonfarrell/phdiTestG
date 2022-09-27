@@ -7,6 +7,8 @@ on:
   push:
     branches:
       - main
+    tags:
+      - '*v'
 
 env:
   TEST_RUNNER_PYTHON_VERSION: 3.9
