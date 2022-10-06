@@ -36,8 +36,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Push generated sphinx docs to sphinx-docs branch for Github pages hosting
-        env: 
-          branches: sphinx-docs
-          key: doc-updates
-          files: .\docs\$semantic_version
+        run: |
+          sphinx-versioning push -r sphinx-docs .\docs\$semantic_version sphinx-docs .
 
