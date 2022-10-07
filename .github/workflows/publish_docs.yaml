@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Generate Sphinx docs
         run: |
-          sphinx-apidoc -o _source phdi
+          sphinx-apidoc -o _source phdi -f
       - name: Generate HTML versions of Sphinx docs
         run: |
           poetry run make html
