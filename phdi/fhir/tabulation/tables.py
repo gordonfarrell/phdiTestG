@@ -48,51 +48,34 @@ def _apply_selection_criteria(
 
 def apply_schema_to_resource(resource: dict, schema: dict) -> dict:
     """
-    Creates and returns a dictionary of data based on a FHIR resource
-    and a schema. The given schema should define a table for each
-    resource type to-be-processed, and each such table must have a
-    list of columns to be included in the table as well as a FHIR-path
-    like object to access the value from the FHIR resource. The keys
-    of the returned dictionary are the lower-cased, underscore-replaced
-    names of the columns entered in the schema.
-
+    Creates and returns a dictionary of data based on a FHIR resource and a schema. The
+    keys of the created dict are the "new names" for the fields in the given schema, and
+    the values are the elements of the given resource that correspond to these fields.
+    Here, `new_name` is a property contained in the schema that specifies what a
+    particular variable should be called. If a schema can't be found for the given
+    resource type, the raw resource is instead returned.
     :param resource: A FHIR resource on which to apply a schema.
-    :param schema: A user-defined schema describing, for one or more
-      tables, the indexing FHIR resource type used to define rows, as
-      well as some number of columns specifying what values to include.
-    A schema specifying the desired values to extract,
+    :param schema: A schema specifying the desired values to extract,
       by FHIR resource type.
-    :return: A dictionary of data with the desired values, as
-      specified by the schema.
+    :return: A dictionary of data with the desired values, as specified by the schema.
     """
 
     data = {}
-    for table_name, table in schema.get("tables", {}).items():
-        resource_type = table.get("resource_type", "")
+    resource_schema = schema.get(resource.get("resourceType", ""))
+    if resource_schema is None:
+        return data
+    for field in resource_schema.keys():
+        path = resource_schema[field]["fhir_path"]
 
-        if resource_type == "":
-            raise ValueError(
-                "Each table must specify resource_type. "
-                + f"resource_type not found in table {table_name}."
-            )
+        parse_function = _get_fhirpathpy_parser(path)
+        value = parse_function(resource)
 
-        # We only care about the parts of the schema that match the resource
-        if resource.get("resourceType", "") == resource_type:
-            for column_name, column in table.get("columns", {}).items():
-                col_in_table = column_name.lower().strip().replace(" ", "_")
-
-                # Use FHIR-path to identify desired value
-                path = column["fhir_path"]
-                parse_function = _get_fhirpathpy_parser(path)
-                value = parse_function(resource)
-
-                if len(value) == 0:
-                    data[col_in_table] = ""
-
-                else:
-                    selection_criteria = column["selection_criteria"]
-                    value = _apply_selection_criteria(value, selection_criteria)
-                    data[col_in_table] = str(value)
+        if len(value) == 0:
+            data[resource_schema[field]["new_name"]] = ""  # pragma: no cover
+        else:
+            selection_criteria = resource_schema[field]["selection_criteria"]
+            value = _apply_selection_criteria(value, selection_criteria)
+            data[resource_schema[field]["new_name"]] = str(value)
 
     return data
 
@@ -204,18 +187,15 @@ def generate_table(
 ) -> None:
     """
     Makes a table for a single schema.
-
-    :param schema: A user-defined schema describing, for one or more
-      tables, the indexing FHIR resource type used to define rows, as
-      well as some number of columns specifying what values to include.
+    :param schema: A schema specifying the desired values, by FHIR resource type.
     :param output_path: A path specifying where the table should be written.
     :param output_format: A string indicating the file format to be used.
     :param fhir_url: A URL to a FHIR server.
     :param cred_manager: The credential manager used to authenticate to the FHIR server.
     """
     output_path.mkdir(parents=True, exist_ok=True)
-    for table in schema.get("tables", {}).values():
-        resource_type = table.get("resource_type")
+    for resource_type in schema:
+
         output_file_name = output_path / f"{resource_type}.{output_format}"
 
         # TODO: make _count (and other query parameters) configurable
@@ -269,7 +249,6 @@ def generate_all_tables_in_schema(
     """
     Queries a FHIR server for information, and generates and stores the tables in the
     desired location, according to the supplied schema.
-
     :param schema_path: A path to the location of a YAML schema config file.
     :param base_output_path: A path to the directory where tables of the schema should
       be written.
@@ -280,9 +259,11 @@ def generate_all_tables_in_schema(
 
     schema = load_schema(schema_path)
 
-    for table in schema.get("tables", {}).values():
-        output_path = base_output_path / table.get("resourceType")
-        generate_table(schema, output_path, output_format, fhir_url, cred_manager)
+    for table in schema.keys():
+        output_path = base_output_path / table
+        generate_table(
+            schema[table], output_path, output_format, fhir_url, cred_manager
+        )
 
 
 @cache
@@ -671,7 +652,8 @@ def _generate_search_urls(schema: dict) -> dict:
     since_top = schema_metadata.get("earliest_update_datetime")
 
     for table_name, table in schema.get("tables", {}).items():
-        resource_type = table.get("resource_type")
+        table_metadata = table.get("metadata", {})
+        resource_type = table_metadata.get("resource_type")
 
         if not resource_type:
             raise ValueError(
@@ -679,14 +661,16 @@ def _generate_search_urls(schema: dict) -> dict:
                 + f"resource_type not found in table {table_name}."
             )
 
-        query_params = table.get("query_params")
+        table = _merge_include_query_params_for_references(table)
+
+        query_params = table_metadata.get("query_params")
         search_string = resource_type
 
         if query_params is not None and len(query_params) > 0:
-            search_string += f"?{urlencode(query_params)}"
+            search_string += f"?{urlencode(query_params,doseq=True)}"
 
-        count = table.get("results_per_page", count_top)
-        since = table.get("earliest_update_datetime", since_top)
+        count = table_metadata.get("results_per_page", count_top)
+        since = table_metadata.get("earliest_update_datetime", since_top)
 
         url_dict[table_name] = _generate_search_url(search_string, count, since)
 
