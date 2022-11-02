@@ -693,15 +693,32 @@ def _generate_search_urls(schema: dict) -> dict:
     return url_dict
 
 
-def _merge_include_query_params_for_references(schema_table: dict) -> None:
+def _merge_include_query_params_for_references(schema_table: dict) -> dict:
+    """
+    Merges _include and _revinclude search terms into query_params for a table's
+    schema metadata based on reference_location directives within the column
+    list for that table.
+
+    :param schema_table: A table definition from a tabulation schema.
+    :return: The modified `schema_table` input parameter. Since the
+      `schema_table` dict is modified in place, the caller can access the
+      result in the original input parameter (if called with a variable)
+      or the return value.
+    """
 
     schema_columns = schema_table.get("columns", {})
+
+    # If there are no pre-defined query_params for a table, create an empty dict
+    # and make sure it is used to populate the table's query_params metadata
     query_params = schema_table["metadata"].get("query_params", {})
     schema_table["metadata"]["query_params"] = query_params
 
     for column_definition in schema_columns.values():
         reference_location = column_definition.get("reference_location")
 
+        # For direct references, reference_location will be a string.
+        # If multiple resources must be chained together to resolve a reference,
+        # that resource include path will be a list
         if isinstance(reference_location, str):
             _merge_include_query_params_for_location(
                 query_params=query_params,
@@ -710,6 +727,7 @@ def _merge_include_query_params_for_references(schema_table: dict) -> None:
             )
         elif isinstance(reference_location, list):
             for index, reference_location_element in enumerate(reference_location):
+                # The first reference in a chain will directly tie to resources
                 if index == 0:
                     query_params = _merge_include_query_params_for_location(
                         query_params=query_params,
@@ -722,6 +740,7 @@ def _merge_include_query_params_for_references(schema_table: dict) -> None:
                         reference_location=reference_location_element,
                         relates_to_anchor=False,
                     )
+    return schema_table
 
 
 def _merge_include_query_params_for_location(
@@ -751,7 +770,7 @@ def _merge_include_query_params_for_location(
       `forward` or `reverse`.
     :return: The modified `query_params` input parameter. Since the
       `query_params` dict is modified in place, the caller can access the
-      result in the original input parameter if called with a variable
+      result in the original input parameter (if called with a variable)
       or the return value.
     """
 
