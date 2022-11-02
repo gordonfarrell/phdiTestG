@@ -593,11 +593,11 @@ def _generate_search_url(
     if default_since is not None and query_string_dict.get("_since") is None:
         query_string_dict["_since"] = [default_since]
 
-    updated_query_string = urlencode(query_string_dict, doseq=True)
+    updated_query_string = urlencode(query_string_dict, doseq=True, safe=":")
     if not updated_query_string:
         return search_url_prefix
 
-    return "?".join((search_url_prefix, urlencode(query_string_dict, doseq=True)))
+    return "?".join((search_url_prefix, updated_query_string))
 
 
 def drop_null(response: list, schema_columns: dict):
@@ -667,7 +667,7 @@ def _generate_search_urls(schema: dict) -> dict:
         search_string = resource_type
 
         if query_params is not None and len(query_params) > 0:
-            search_string += f"?{urlencode(query_params,doseq=True)}"
+            search_string += f"?{urlencode(query_params,doseq=True,safe=':')}"
 
         count = table_metadata.get("results_per_page", count_top)
         since = table_metadata.get("earliest_update_datetime", since_top)

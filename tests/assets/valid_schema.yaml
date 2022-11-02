@@ -42,3 +42,9 @@ tables:
         include_nulls: false
         include_unknowns: false
         selection_criteria: first
+      Observation Patient:
+        fhir_path: Patient.name.select(given.first() + " " + family)
+        include_nulls: false
+        include_unknowns: false
+        selection_criteria: first
+        reference_location: forward:Observation:subject

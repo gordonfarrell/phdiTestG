@@ -456,7 +456,7 @@ def test_generate_search_url():
     base_fhir_url = "https://fhir-host/r4"
 
     test_search_url_1 = urllib.parse.quote(
-        "Patient?birtdate=2000-01-01T00:00:00", safe="?="
+        "Patient?birtdate=2000-01-01T00:00:00", safe="?=:"
     )
     assert (
         _generate_search_url(f"{base_fhir_url}/{test_search_url_1}")
@@ -477,7 +477,7 @@ def test_generate_search_url():
             f"{test_search_url_1}&_count=10", default_since="2022-01-01T00:00:00"
         )
         == f"{test_search_url_1}"
-        + f"{urllib.parse.quote('&_count=10&_since=2022-01-01T00:00:00', safe='&=')}"
+        + f"{urllib.parse.quote('&_count=10&_since=2022-01-01T00:00:00', safe='&=:')}"
     )
 
     test_search_url_2 = "Patient"
@@ -500,13 +500,13 @@ def test_generate_search_url():
             f"{test_search_url_2}?_count=10", default_since="2022-01-01T00:00:00"
         )
         == f"{test_search_url_2}"
-        + f"{urllib.parse.quote('?_count=10&_since=2022-01-01T00:00:00', safe='?&=')}"
+        + f"{urllib.parse.quote('?_count=10&_since=2022-01-01T00:00:00', safe='?&=:')}"
     )
 
     test_search_url_3 = urllib.parse.quote(
         "Observation?"
         + "category=http://hl7.org/fhir/ValueSet/observation-category|laboratory",
-        safe="?=",
+        safe="?=:",
     )
     assert (
         _generate_search_url(f"{base_fhir_url}/{test_search_url_3}")
@@ -527,7 +527,7 @@ def test_generate_search_url():
             f"{test_search_url_3}&_count=10", default_since="2022-01-01T00:00:00"
         )
         == f"{test_search_url_3}"
-        + f"{urllib.parse.quote('&_count=10&_since=2022-01-01T00:00:00', safe='?&=')}"
+        + f"{urllib.parse.quote('&_count=10&_since=2022-01-01T00:00:00', safe='?&=:')}"
     )
 
 
@@ -549,8 +549,9 @@ def test_generate_search_urls(patch_generate_search_url):
         "table 1A": "Patient||1000||2020-01-01T00:00:00",
         "table 2A": "Observation?category="
         + urllib.parse.quote(
-            "http://hl7.org/fhir/ValueSet/observation-category|laboratory", safe=""
+            "http://hl7.org/fhir/ValueSet/observation-category|laboratory", safe=":"
         )
+        + "&_include=Observation:subject"
         + urllib.parse.quote("||1000||None", safe="|"),
     }
 
