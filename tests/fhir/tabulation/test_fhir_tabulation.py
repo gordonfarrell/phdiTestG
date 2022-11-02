@@ -904,13 +904,11 @@ def test_merge_include_query_params_for_location():
     )
 
     assert schema_table["metadata"].get("query_params", {}) == {
-        "_include": ["Observation.subject"]
+        "_revinclude": ["Observation.subject"]
     }
 
     # Test forward reference with existing _include query parameter
     schema_table = schema["tables"]["forward include additive"]
-
-    _merge_include_query_params_for_references(schema_table=schema_table)
 
     schema_table["metadata"]["query_params"] = _merge_include_query_params_for_location(
         query_params=schema_table["metadata"].get("query_params", {}),
@@ -922,7 +920,7 @@ def test_merge_include_query_params_for_location():
 
     assert schema_table["metadata"].get("query_params", {}) == {
         "test": "value",
-        "_include": ["existing value", "Observation.subject"],
+        "_include": ["existing value", "Patient.generalPractitioner"],
     }
 
     # Test forward reference with existing multi-value _include query parameter
@@ -938,24 +936,33 @@ def test_merge_include_query_params_for_location():
 
     assert schema_table["metadata"].get("query_params", {}) == {
         "test": "value",
-        "_include": ["existing value", "existing value2", "Observation.subject"],
+        "_include": [
+            "existing value",
+            "existing value2",
+            "Patient.generalPractitioner",
+        ],
     }
 
     # Test chained reverse then forward reference
     schema_table = schema["tables"]["reverse forward chain"]
 
-    _merge_include_query_params_for_references(schema_table=schema_table)
-
     schema_table["metadata"]["query_params"] = _merge_include_query_params_for_location(
         query_params=schema_table["metadata"].get("query_params", {}),
-        reference_location=schema_table["columns"]["General Practitioner"][
+        reference_location=schema_table["columns"]["Case Organization"][
             "reference_location"
-        ],
+        ][0],
         relates_to_anchor=True,
+    )
+    schema_table["metadata"]["query_params"] = _merge_include_query_params_for_location(
+        query_params=schema_table["metadata"].get("query_params", {}),
+        reference_location=schema_table["columns"]["Case Organization"][
+            "reference_location"
+        ][1],
+        relates_to_anchor=False,
     )
 
     assert schema_table["metadata"].get("query_params", {}) == {
         "test": "value",
         "_revinclude": ["Composition:subject"],
-        "_include:iterate": ["Composition:subject"],
+        "_include:iterate": ["Composition:custodian"],
     }
