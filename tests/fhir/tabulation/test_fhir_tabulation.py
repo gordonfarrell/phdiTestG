@@ -773,6 +773,12 @@ def test_extract_data_from_schema(patch_search, patch_gen_urls):
 @mock.patch("phdi.fhir.tabulation.tables._merge_include_query_params_for_location")
 def test_merge_include_query_params_for_references(patch_merge_location):
 
+    # Pass through query_params as return value since we aren't checking functionality
+    # for _merge_include_query_params_for_location in this test
+    patch_merge_location.side_effect = (
+        lambda query_params, reference_location, relates_to_anchor: query_params
+    )
+
     schema = yaml.safe_load(
         open(
             pathlib.Path(__file__).parent.parent.parent

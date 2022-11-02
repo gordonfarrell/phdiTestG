@@ -682,8 +682,6 @@ def _generate_search_urls(schema: dict) -> dict:
         query_params = table.get("query_params")
         search_string = resource_type
 
-        _merge_include_query_params_for_references(table)
-
         if query_params is not None and len(query_params) > 0:
             search_string += f"?{urlencode(query_params)}"
 
