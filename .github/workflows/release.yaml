@@ -11,4 +11,4 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Whatever
-        uses: ./.github/workflows/test.yaml
+        uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
