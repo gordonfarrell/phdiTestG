@@ -8,4 +8,4 @@ jobs:
     steps:
       -uses: actions/checkout@v3
       -name: Call test
-      uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+       uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
