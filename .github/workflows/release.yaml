@@ -4,4 +4,4 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test.yaml
+    uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
