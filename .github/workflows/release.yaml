@@ -4,8 +4,8 @@ on:
 
 jobs:
   test:
+    runs-on: ubuntu-latest
     steps:
-      checkout:
-        uses: actions/checkout@v3
-      run-test:
-        uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+      -uses: actions/checkout@v3
+      -name: Call test
+      uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
