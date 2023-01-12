@@ -3,5 +3,5 @@ on:
   workflow_dispatch:
 
 jobs:
-  call-test-workflow:
+  test:
     uses: ./.github/workflows/test.yaml
