@@ -6,7 +6,5 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      one:
-        uses: actions/checkout@v3
-      two:
-        uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+      - uses: actions/checkout@v3
+      - uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
