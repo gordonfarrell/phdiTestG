@@ -1,8 +1,7 @@
 name: Release
-
 on:
   workflow_dispatch:
 
 jobs:
   call-test-workflow:
-    uses: phdi/.github/workflows/test.yaml
+    uses: test.yaml
