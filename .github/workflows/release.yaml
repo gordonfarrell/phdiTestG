@@ -5,4 +5,4 @@ on:
 
 jobs:
   call-test-workflow:
-    uses: .github/workflows/test.yaml
+    uses: phdi/.github/workflows/test.yaml
