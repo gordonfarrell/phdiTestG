@@ -4,4 +4,4 @@ on:
 
 jobs:
   call-test-workflow:
-    uses: test.yaml
+    uses: ./.github/workflows/test.yaml
