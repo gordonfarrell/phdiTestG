@@ -4,4 +4,8 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+    steps:
+      checkout:
+        uses: actions/checkout@v3
+      run-test:
+        uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
