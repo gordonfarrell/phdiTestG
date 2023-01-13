@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+    uses: ./.github/workflows/tester.yaml
   create-tagged-release:
     needs: test
-    uses: ./.github/workflows/createTaggedRelease.yml@gordon/automated-release-workflow
+    uses: ./.github/workflows/createTaggedRelease.yml
