@@ -1,13 +1,8 @@
 name: Test Two
 on:
-  workflow_dispatch:
   workflow_call:
-  pull_request:
-    branches:
-      - "**"
   push:
-    branches:
-      - main
+    branches: gordon/automated-release-workflow
 
 env:
   TEST_RUNNER_PYTHON_VERSION: 3.9
