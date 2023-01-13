@@ -7,4 +7,4 @@ on:
 jobs:
   unit-test-phdi-building-blocks-lib:
     runs-on: ubuntu-latest
-    uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
+    uses: ./.github/workflows/test.yaml
