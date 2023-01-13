@@ -5,5 +5,8 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-  unit-test-phdi-building-blocks-lib:
+  test:
     uses: ./.github/workflows/test.yaml
+  create-tagged-release:
+    needs: test
+    uses: ./.github/workflows/createTaggedRelease.yml
