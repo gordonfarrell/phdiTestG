@@ -7,8 +7,4 @@ on:
 jobs:
   unit-test-phdi-building-blocks-lib:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Whatever
-        uses: ./test.yaml@gordon/automated-release-workflow
+    uses: ./.github/workflows/test.yaml@gordon/automated-release-workflow
