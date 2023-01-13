@@ -7,9 +7,15 @@ on:
 jobs:
   test:
     uses: ./.github/workflows/tester.yaml
+
   create-tagged-release:
     needs: test
     uses: ./.github/workflows/createTaggedRelease.yml
+
+  update-docs:
+    needs: create-tagged-release
+    uses: ./.github/workflows/updateDocs.yaml
+
 #  publish-to-pypi:
 #    needs:
 #    uses: ./.github/workflows/publishToPyPi.yml

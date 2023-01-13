@@ -1,0 +1,37 @@
+
+name: WIP Update Docs
+on:
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches: gordon/automated-release-workflow
+
+env:
+  TEST_RUNNER_PYTHON_VERSION: 3.9
+
+jobs:
+  build-sphinx-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate Sphinx docs
+        run: |
+          sphinx-apidoc -o _source phdi -f
+      - name: Generate HTML versions of Sphinx docs
+        run: |
+          poetry run make html
+      - name: Get version of project
+        run: |
+          $pypi_version="$(toml get --toml-path pyproject.toml tool.poetry.version)"
+      - name: Rework for semantic version
+        run: |
+          $semantic_version="v$($pypi_version.Substring(0,5))-$($pypi_version.split(".")[-1] -replace '[^a-zA-Z-]','')"
+      - name: Rename html folder to semantic version
+        run: |
+          Rename-Item -Path ".\docs\html" -NewName $semantic_version
+  push-to-sphinx-docs-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Push generated sphinx docs to sphinx-docs branch for Github pages hosting
+        run: |
+          sphinx-versioning push -r sphinx-docs .\docs\$semantic_version sphinx-docs .
+          echo "done"
