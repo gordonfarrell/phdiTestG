@@ -1,13 +1,10 @@
-name: Publish to PyPI
+name: WIP Publish to PyPI
 if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
 on:
   workflow_dispatch:
-  pull_request:
-    branches:
-      - "**"
+  workflow_call:
   push:
-    branches:
-      - main
+    branches: gordon/automated-release-workflow
 
 env:
   TEST_RUNNER_PYTHON_VERSION: 3.9
