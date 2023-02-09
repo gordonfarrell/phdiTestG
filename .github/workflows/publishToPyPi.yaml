@@ -27,6 +27,7 @@ jobs:
       - name: Install dependencies
         run: poetry install
   publish-to-pypi:
+    needs: unit-test-phdi-building-blocks-lib
     runs-on: ubuntu-latest
     steps:
       - name: Build source and wheels archives & dry run of publication
