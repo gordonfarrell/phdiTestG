@@ -26,13 +26,16 @@ jobs:
           echo "${HOME}/.poetry/bin" >> $GITHUB_PATH
       - name: Install dependencies
         run: poetry install
-  publish-to-pypi:
-    needs: unit-test-phdi-building-blocks-lib
-    runs-on: ubuntu-latest
-    steps:
       - name: Build source and wheels archives & dry run of publication
         run: |
           poetry publish --username [username to access the repository] --password [pw for repo] --build --dry-run
+#  publish-to-pypi:
+#    needs: unit-test-phdi-building-blocks-lib
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Build source and wheels archives & dry run of publication
+#        run: |
+#          poetry publish --username [username to access the repository] --password [pw for repo] --build --dry-run
 #      - name: Publish package to PyPI
 #        run: |
 #          poetry publish --username [username to access the repository] --password [pw for repo]
