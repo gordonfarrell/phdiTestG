@@ -1,6 +1,28 @@
+import pathlib
 import phonenumbers
 import pycountry
+from phdi.harmonization.double_metaphone import DoubleMetaphone
 from typing import Literal, List, Union
+
+
+def double_metaphone_string(string: str, dmeta=None) -> List[Union[str, None]]:
+    """
+    Performs the double metaphone phonetic encoding algorithm on the given
+    string. Returns a list holding the primary and secondary phonetic
+    representations of the string (including None if there is no valid
+    secondary encoding). This function expects basic text cleaning (e.g.
+    removal of numeric characters, trimming of spaces, etc.) to already
+    have been performed.
+
+    :param string: The string to phonetically encode.
+    :param dmeta: An optional existing double metaphone object, in the case
+      one has already been instantiated for bulk processing.
+    :return: A list of the primary and secondary encodings of the given
+      string.
+    """
+    if dmeta is None:
+        dmeta = DoubleMetaphone()
+    return dmeta(string)
 
 
 def standardize_country_code(
@@ -94,7 +116,6 @@ def standardize_phone(
     for phone in phones_to_clean:
         standardized = ""
         for country in countries:
-
             # We were able to pull the phone # and corresponding country
             try:
                 standardized = phonenumbers.parse(phone, country)
@@ -173,3 +194,14 @@ def standardize_name(
     if isinstance(raw_name, str):
         return outputs[0]
     return outputs
+
+
+def _build_nicknames_db():
+    nicknames_to_names = {}
+    with open(pathlib.Path(__file__).parent / "phdi_nicknames.csv", "r") as fp:
+        for line in fp:
+            if line.strip() != "":
+                name, nicks = line.strip().split(":", 1)
+                for nickname in nicks.split(","):
+                    nicknames_to_names[nickname] = name
+    return nicknames_to_names
