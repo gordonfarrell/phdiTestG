@@ -28,7 +28,7 @@ jobs:
         run: poetry install
       - name: Build source and wheels archives & dry run of publication
         run: |
-          poetry publish --username fake --password fakey --build --dry-run
+          poetry publish --username fake --password fakey654654654654 --build --dry-run
 #  publish-to-pypi:
 #    needs: unit-test-phdi-building-blocks-lib
 #    runs-on: ubuntu-latest

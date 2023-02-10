@@ -12,8 +12,9 @@ jobs:
   build-sphinx-docs:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate Sphinx docs
+      - name: Install and Generate Sphinx docs
         run: |
+          pip install Sphinx
           sphinx-apidoc -o _source phdi -f
       - name: Generate HTML versions of Sphinx docs
         run: |
@@ -30,7 +31,7 @@ jobs:
   push-to-sphinx-docs-branch:
     runs-on: ubuntu-latest
     steps:
-      - name: Push generated sphinx docs to sphinx-docs branch for Github pages hosting
+      - name: Push generated sphinx docs to docs branch for Github pages hosting
         run: |
-          sphinx-versioning push -r sphinx-docs .\docs\$semantic_version sphinx-docs .
+          sphinx-versioning push -r docs .\docs\$semantic_version sphinx-docs .
           echo "done"
