@@ -1,7 +1,7 @@
 name: WIP Update Docs
 on:
   workflow_dispatch:
-#  workflow_call:
+  workflow_call:
 #  push:
 #    branches: gordon/automated-release-workflow
 

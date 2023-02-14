@@ -1,6 +1,7 @@
 name: WIP Create Tagged Release
 on:
   workflow_dispatch:
+  workflow_call:
 
 jobs:
   build:
