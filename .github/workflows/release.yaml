@@ -1,6 +1,7 @@
 name: WIP Release
 on:
   workflow_dispatch:
+  workflow_call:
   push:
     branches: gordon/automated-release-workflow
 
