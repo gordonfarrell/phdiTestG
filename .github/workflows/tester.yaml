@@ -1,6 +1,7 @@
 name: WIP Test
 on:
   workflow_dispatch:
+  workflow_call:
 
 env:
   TEST_RUNNER_PYTHON_VERSION: 3.9
