@@ -19,4 +19,4 @@ jobs:
 
   publish-to-pypi:
     needs: create-tagged-release
-    uses: ./.github/workflows/publishToPyPi.yml
+    uses: ./.github/workflows/publishToPyPi.yaml
