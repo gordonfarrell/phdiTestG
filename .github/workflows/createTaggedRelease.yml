@@ -1,9 +1,7 @@
 name: WIP Create Tagged Release
 on:
   workflow_dispatch:
-  workflow_call:
-  push:
-    branches: gordon/automated-release-workflow
+
 jobs:
   build:
     runs-on: ubuntu-22.04

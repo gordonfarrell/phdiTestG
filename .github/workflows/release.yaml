@@ -16,6 +16,6 @@ jobs:
     needs: create-tagged-release
     uses: ./.github/workflows/updateDocs.yaml
 
-#  publish-to-pypi:
-#    needs:
-#    uses: ./.github/workflows/publishToPyPi.yml
+  publish-to-pypi:
+    needs: create-tagged-release
+    uses: ./.github/workflows/publishToPyPi.yml
