@@ -14,7 +14,7 @@ jobs:
     steps:
       - name: Install and Generate Sphinx docs
         run: |
-#          pip install Sphinx
+          pip install Sphinx
           sphinx-apidoc -o _source -f
       - name: Generate HTML versions of Sphinx docs
         run: |
