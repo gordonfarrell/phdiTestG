@@ -18,6 +18,7 @@ jobs:
           sphinx-apidoc -o _source . -f
       - name: Generate HTML versions of Sphinx docs
         run: |
+          pip install poetry
           poetry run make html
       - name: Get version of project
         run: |
