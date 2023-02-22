@@ -10,6 +10,7 @@ jobs:
     uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
+    needs: test
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
@@ -22,6 +23,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
           CUSTOM_TAG: '0.0.9'
+          VERBOSE: true
 
 
 #    needs: test
