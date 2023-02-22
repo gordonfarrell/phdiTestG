@@ -1,4 +1,4 @@
-name: WIP Release
+name: Test and Tag Release
 on:
   workflow_dispatch:
   workflow_call:
@@ -10,13 +10,26 @@ jobs:
     uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
-    needs: test
-    uses: ./.github/workflows/createTaggedRelease.yml
+    runs-on: ubuntu-22.04
+      steps:
+        - uses: actions/checkout@v3
+          with:
+            fetch-depth: '0'
 
-  update-docs:
-    needs: create-tagged-release
-    uses: ./.github/workflows/updateDocs.yaml
+        - name: Bump version and push tag
+          uses: anothrNick/github-tag-action@1.55.0 # Don't use @master unless you're happy to test the latest version
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            WITH_V: true
+            CUSTOM_TAG: '0.0.9'
 
-  publish-to-pypi:
-    needs: create-tagged-release
-    uses: ./.github/workflows/publishToPyPi.yaml
+#    needs: test
+#    uses: ./.github/workflows/createTaggedRelease.yml
+#
+#  update-docs:
+#    needs: create-tagged-release
+#    uses: ./.github/workflows/updateDocs.yaml
+#
+#  publish-to-pypi:
+#    needs: create-tagged-release
+#    uses: ./.github/workflows/publishToPyPi.yaml
