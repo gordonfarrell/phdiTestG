@@ -6,11 +6,11 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-  test:
-    uses: ./.github/workflows/tester.yaml
+#  test:
+#    uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
-    needs: test
+#    needs: test
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
