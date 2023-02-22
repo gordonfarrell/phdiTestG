@@ -5,26 +5,23 @@ on:
   push:
     branches: gordon/automated-release-workflow
 
-env:
-  TEST_RUNNER_PYTHON_VERSION: 3.9
-
 jobs:
   test:
     uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
     runs-on: ubuntu-22.04
-      steps:
-        - uses: actions/checkout@v3
-          with:
-            fetch-depth: '0'
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
 
-        - name: Bump version and push tag
-          uses: anothrNick/github-tag-action@1.55.0 # Don't use @master unless you're happy to test the latest version
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            WITH_V: true
-            CUSTOM_TAG: '0.0.9'
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.55.0 # Don't use @master unless you're happy to test the latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          CUSTOM_TAG: '0.0.9'
 
 
 #    needs: test
