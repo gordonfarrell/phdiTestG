@@ -1,7 +1,6 @@
 name: Test and Tag Release
 on:
   workflow_dispatch:
-  workflow_call:
   push:
     branches: gordon/automated-release-workflow
 
@@ -27,7 +26,6 @@ jobs:
           CUSTOM_TAG: '0.0.9'
           VERBOSE: true
           INITIAL_VERSION: 'v0.1.0-dev'
-
 
 #    needs: test
 #    uses: ./.github/workflows/createTaggedRelease.yml
