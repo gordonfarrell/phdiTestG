@@ -25,7 +25,6 @@ jobs:
           WITH_V: true
           CUSTOM_TAG: '0.0.9'
           VERBOSE: true
-          INITIAL_VERSION: 'v0.1.0-dev'
 
 #    needs: test
 #    uses: ./.github/workflows/createTaggedRelease.yml
