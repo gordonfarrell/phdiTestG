@@ -5,6 +5,9 @@ on:
   push:
     branches: gordon/automated-release-workflow
 
+env:
+  TEST_RUNNER_PYTHON_VERSION: 3.9
+
 jobs:
   test:
     uses: ./.github/workflows/tester.yaml
