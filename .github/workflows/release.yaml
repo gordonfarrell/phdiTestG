@@ -11,7 +11,7 @@ jobs:
   create-tagged-release:
 #    needs: test
     permissions:
-      actions: write
+      contents: write
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
