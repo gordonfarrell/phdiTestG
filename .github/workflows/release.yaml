@@ -48,7 +48,7 @@ jobs:
 
       - name: Generate docs
         run: |
-          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          poetry run pdoc ./phdi -o ./docs/1.1.1
 
 
 #    needs: test
