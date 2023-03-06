@@ -1,4 +1,4 @@
-name: Test and Tag Release
+name: Test, tag, document
 on:
   workflow_dispatch:
     inputs:
@@ -42,8 +42,9 @@ jobs:
 
       - name: Install pdoc and generate documentation
         run: |
-          pip install pdoc
-          pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          pip install poetry
+          poetry install
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
 
 
 #    needs: test
