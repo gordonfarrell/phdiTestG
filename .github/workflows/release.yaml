@@ -41,8 +41,8 @@ jobs:
 
       - name: Install pdoc and generate documentation
         run: |
-          poetry install
-          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          pip install pdoc
+          pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
 
 
 #    needs: test
