@@ -31,7 +31,7 @@ jobs:
           CUSTOM_TAG: ${{ github.event.inputs.custom_tag }}
 
   generate-and-update-docs:
-    needs: Bump version and push tag
+    needs: create-tagged-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
