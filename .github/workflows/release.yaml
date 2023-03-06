@@ -30,6 +30,21 @@ jobs:
           WITH_V: true
           CUSTOM_TAG: ${{ github.event.inputs.custom_tag }}
 
+  generate-and-update-docs:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+
+      - name: Install pdoc and generate documentation
+        run: |
+          poetry install
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+
+
 #    needs: test
 #    uses: ./.github/workflows/createTaggedRelease.yml
 #
