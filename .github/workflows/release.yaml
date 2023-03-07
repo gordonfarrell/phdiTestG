@@ -52,13 +52,13 @@ jobs:
 
       - name: Transfer docs to docs branch and push
         run: |
-          git status
-#          git checkout docs
-#          git stash pop
-#          git add ./docs/${{ github.event.inputs.custom_tag }}
-#          git commit -m "Auto Release Doc Update: adding new docs for ${{ github.event.inputs.custom_tag }} release"
-#          git push
-#          git checkout main
+          git stash
+          git checkout docs
+          git stash pop
+          git add ./docs/hello
+          git commit -m "Auto Release Doc Update: adding new docs for ${{ github.event.inputs.custom_tag }} release"
+          git push
+          git checkout main
 
 
 #    needs: test
