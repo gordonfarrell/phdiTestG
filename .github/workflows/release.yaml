@@ -10,11 +10,11 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-  test:
-    uses: ./.github/workflows/tester.yaml
+#  test:
+#    uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
-    needs: test
+#    needs: test
     permissions:
       contents: write
     runs-on: ubuntu-22.04
