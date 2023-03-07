@@ -47,17 +47,9 @@ jobs:
 
       - name: Generate docs
         run: |
-          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
-          echo "========================Start========================"
-          git status
-          echo "========================Stashing========================"
-          git stash --include-untracked
-          echo "========================Post-Stash========================"
-          git status
+          poetry run pdoc ./phdi -o ./docs/tester
           git checkout docs --
-          echo "========================Docs Branch========================"
           git status
-          echo "========================Pre-pop========================"
-          git stash pop
-          echo "========================Post pop========================"
-          git status
+
+
+#  ${{ github.event.inputs.custom_tag }}
