@@ -48,7 +48,12 @@ jobs:
       - name: Generate docs
         run: |
           poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          echo "Pre checkout"
+          git status
           git stash --include-untracked
           git checkout docs --
+          echo "In docs"
+          git status
           git stash pop
+          echo "Popped"
           git status
