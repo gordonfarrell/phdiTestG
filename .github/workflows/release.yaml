@@ -50,10 +50,11 @@ jobs:
         run: |
           poetry run pdoc ./phdi -o ./docs/hello
 
-      - name: Transfer to docs branch
-        - uses: stefanzweifel/git-auto-commit-action@v4
-            commit_message: "Automated API doc update for ${{ github.event.inputs.custom_tag }} release."
-            branch: docs
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Automated API doc update for ${{ github.event.inputs.custom_tag }} release.
+          branch: docs
 
 #    needs: test
 #    uses: ./.github/workflows/createTaggedRelease.yml
