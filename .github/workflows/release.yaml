@@ -1,4 +1,4 @@
-name: wtf
+name: Reeeeelease
 on:
   workflow_dispatch:
     inputs:
@@ -44,13 +44,9 @@ jobs:
         run: |
           pip install poetry
           poetry install
-          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
 
       - name: Generate docs
         run: |
           poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
-
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Automated API doc update for ${{ github.event.inputs.custom_tag }} release.
-          branch: docs
+          git checkout docs --
+          git status
