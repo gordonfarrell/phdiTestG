@@ -9,7 +9,7 @@ on:
   push:
     branches: gordon/automated-release-workflow
 
-jobs:
+jobs: 
   test:
     uses: ./.github/workflows/tester.yaml
 
@@ -17,7 +17,7 @@ jobs:
     needs: test
     permissions:
       contents: write
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
         with:
@@ -30,13 +30,29 @@ jobs:
           WITH_V: true
           CUSTOM_TAG: ${{ github.event.inputs.custom_tag }}
 
-#    needs: test
-#    uses: ./.github/workflows/createTaggedRelease.yml
-#
-#  update-docs:
-#    needs: create-tagged-release
-#    uses: ./.github/workflows/updateDocs.yaml
-#
-#  publish-to-pypi:
-#    needs: create-tagged-release
-#    uses: ./.github/workflows/publishToPyPi.yaml
+  generate-and-update-docs:
+    needs: create-tagged-release
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+
+      - name: Install poetry and dependencies
+        run: |
+          pip install poetry
+          poetry install
+
+      - name: Generate docs and switch to docs branch
+        run: |
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          git checkout docs --
+
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit-message: Automated update of API docs for ${{ github.event.inputs.custom_tag }} release.
+
+
+
