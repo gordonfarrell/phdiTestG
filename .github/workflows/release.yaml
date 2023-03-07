@@ -1,4 +1,4 @@
-name: Release
+name: wtf
 on:
   workflow_dispatch:
     inputs:
