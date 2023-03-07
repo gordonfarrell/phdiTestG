@@ -10,11 +10,11 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-#  test:
-#    uses: ./.github/workflows/tester.yaml
+  test:
+    uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
-#    needs: test
+    needs: test
     permissions:
       contents: write
     runs-on: ubuntu-22.04
@@ -44,25 +44,14 @@ jobs:
         run: |
           pip install poetry
           poetry install
-          poetry run pdoc ./phdi -o ./docs/hello
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
 
       - name: Generate docs
         run: |
-          poetry run pdoc ./phdi -o ./docs/hello
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
 
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Automated API doc update for ${{ github.event.inputs.custom_tag }} release.
           branch: docs
-
-#    needs: test
-#    uses: ./.github/workflows/createTaggedRelease.yml
-#
-#  update-docs:
-#    needs: create-tagged-release
-#    uses: ./.github/workflows/updateDocs.yaml
-#
-#  publish-to-pypi:
-#    needs: create-tagged-release
-#    uses: ./.github/workflows/publishToPyPi.yaml
