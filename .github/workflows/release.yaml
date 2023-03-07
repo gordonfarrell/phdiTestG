@@ -10,28 +10,28 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-#  test:
-#    uses: ./.github/workflows/tester.yaml
+  test:
+    uses: ./.github/workflows/tester.yaml
 
-#  create-tagged-release:
-#    needs: test
-#    permissions:
-#      contents: write
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - uses: actions/checkout@v3
-#        with:
-#          fetch-depth: '0'
-#
-#      - name: Bump version and push tag
-#        uses: anothrNick/github-tag-action@1.55.0 # Don't use @master unless you're happy to test the latest version
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          WITH_V: true
-#          CUSTOM_TAG: ${{ github.event.inputs.custom_tag }}
+  create-tagged-release:
+    needs: test
+    permissions:
+      contents: write
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: '0'
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.55.0 # Don't use @master unless you're happy to test the latest version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          CUSTOM_TAG: ${{ github.event.inputs.custom_tag }}
 
   generate-and-update-docs:
-#    needs: create-tagged-release
+    needs: create-tagged-release
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -47,14 +47,11 @@ jobs:
 
       - name: Generate docs
         run: |
-          poetry run pdoc ./phdi -o ./docs/tester
+          poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
           git checkout docs --
           git status
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit-message: i am a test
+          commit_message: Automated update of API docs for ${{ github.event.inputs.custom_tag }} release.
           branch: docs
-
-
-#  ${{ github.event.inputs.custom_tag }}
