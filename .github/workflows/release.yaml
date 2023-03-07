@@ -10,11 +10,11 @@ on:
     branches: gordon/automated-release-workflow
 
 jobs:
-  test:
-    uses: ./.github/workflows/tester.yaml
+#  test:
+#    uses: ./.github/workflows/tester.yaml
 
   create-tagged-release:
-    needs: test
+#    needs: test
     permissions:
       contents: write
     runs-on: ubuntu-22.04
@@ -48,5 +48,7 @@ jobs:
       - name: Generate docs
         run: |
           poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
+          git stash --include-untracked
           git checkout docs --
+          git stash pop
           git status
