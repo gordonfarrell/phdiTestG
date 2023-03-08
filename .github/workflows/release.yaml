@@ -48,9 +48,7 @@ jobs:
       - name: Generate docs and move to docs branch
         run: |
           poetry run pdoc ./phdi -o ./docs/${{ github.event.inputs.custom_tag }}
-          git stash --include-untracked
           git checkout docs --
-          git stash pop
 
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
